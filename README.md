@@ -22,8 +22,7 @@ com.template.package/
 ├── package.json        # Package manifest
 ├── README.md           # Package documentation
 ├── CHANGELOG.md        # Version history
-├── LICENSE            # MIT license
-└── .gitattributes     # Git attributes
+└── LICENSE            # MIT license
 ```
 
 ## Quick Start
@@ -95,7 +94,7 @@ com.template.package/
 ## Requirements
 
 - Unity 2022.3.22f1 or higher
-- Git LFS for large file support
+- Git
 
 ## Best Practices
 

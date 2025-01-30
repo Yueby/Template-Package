@@ -8,7 +8,7 @@ This Unity package template provides a standardized foundation for creating cust
 
 ### Prerequisites
 - Unity 2022.3.22f1 or later
-- Git with LFS support
+- Git
 - Basic knowledge of Unity package development
 
 ### Installation
@@ -29,8 +29,7 @@ com.template.package/
 ├── package.json      # Package manifest
 ├── README.md         # Quick start guide
 ├── CHANGELOG.md      # Version history
-├── LICENSE          # MIT license
-└── .gitattributes   # Git attributes
+└── LICENSE          # MIT license
 ```
 
 ## Development Guide
@@ -70,7 +69,7 @@ com.template.package/
 ### Version Control
 - Use meaningful commit messages
 - Follow semantic versioning
-- Update CHANGELOG.md
+- Update CHANGELOG.md for each release
 - Tag releases properly
 
 ## API Reference
