@@ -4,42 +4,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  config:
-    runs-on: ubuntu-latest
-    outputs:
-      config_package: ${{ steps.config_package.outputs.configPackage }}
-    steps:
-    - name: Validate Package Config
-      id: config_package
-      run: |
-        if [ "${{ vars.PACKAGE_NAME }}" != "" ]; then
-          echo "configPackage=true" >> $GITHUB_OUTPUT;
-        else
-          echo "configPackage=false" >> $GITHUB_OUTPUT;
-        fi
-
   build:
-    needs: config
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: needs.config.outputs.config_package == 'true'
+
     steps:
       - name: Checkout
-        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+        uses: actions/checkout@v4
 
       - name: Get Version
         id: version
-        uses: zoexx/github-action-json-file-properties@b9f36ce6ee6fe2680cd3c32b2c62e22eade7e590
-        with: 
-            file_path: "package.json"
-            prop_path: "version"
+        run: |
+          echo "version=$(cat package.json | jq -r .version)" >> $GITHUB_OUTPUT
+          if [ "${{ vars.PACKAGE_NAME }}" == "" ]; then
+            echo "Error: PACKAGE_NAME not set in repository variables"
+            exit 1
+          fi
     
       - name: Set Environment Variables
         run: |
-          echo "zipFile=${{ vars.PACKAGE_NAME }}-${{ steps.version.outputs.value }}.zip" >> $GITHUB_ENV
-          echo "unityPackage=${{ vars.PACKAGE_NAME }}-${{ steps.version.outputs.value }}.unitypackage" >> $GITHUB_ENV
-          echo "version=${{ steps.version.outputs.value }}" >> $GITHUB_ENV
+          echo "zipFile=${{ vars.PACKAGE_NAME }}-${{ steps.version.outputs.version }}.zip" >> $GITHUB_ENV
+          echo "unityPackage=${{ vars.PACKAGE_NAME }}-${{ steps.version.outputs.version }}.unitypackage" >> $GITHUB_ENV
 
       - name: Create Package Zip
         run: zip -r "${{ github.workspace }}/${{ env.zipFile }}" .
@@ -53,17 +39,12 @@ jobs:
           package-path: ${{ env.unityPackage }}
           include-files: metaList
       
-      - name: Create Tag
-        id: tag_version
-        uses: rickstaa/action-create-tag@88dbf7ff6fe2405f8e8f6c6fdfd78829bc631f83
-        with:
-          tag: "${{ env.version }}"
-      
       - name: Make Release
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
+        uses: softprops/action-gh-release@v1
         with:
+          body_path: CHANGELOG.md
           files: |
             ${{ env.zipFile }}
             ${{ env.unityPackage }}
             package.json
-          tag_name: ${{ env.version }} 
+          tag_name: ${{ steps.version.outputs.version }} 
