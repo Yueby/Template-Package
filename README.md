@@ -60,11 +60,36 @@ com.template.package/
    - Navigate to Settings > Secrets and variables > Actions
    - Add variable: `PACKAGE_NAME` = `com.company.package-name`
 
-2. Available GitHub Actions:
+2. Configure PAT for workflow triggers:
+   - Create a Personal Access Token (PAT):
+     1. Go to GitHub Settings > Developer settings > Personal access tokens
+     2. Select "Tokens (classic)"
+     3. Click "Generate new token (classic)"
+     4. Set description and expiration (90 days recommended)
+     5. Select only the `workflow` permission
+   
+   - Add PAT secret:
+     1. Go to repository Settings > Secrets and variables > Actions
+     2. Add new secret named `PAT`
+     3. Value format (JSON):
+     ```json
+     {
+       "token": "your_pat_token",
+       "targets": [
+         {
+           "repo": "target-repo-name",
+           "workflow": "workflow-file.yml"
+         }
+       ]
+     }
+     ```
+
+3. Available GitHub Actions:
    - **Release Workflow** (`release.yml`)
      - Automatically creates Unity package and GitHub release
      - Generates release from CHANGELOG.md
      - Creates both .unitypackage and .zip formats
+     - Can trigger other repository workflows after release
      - Triggered manually from Actions tab
 
    - **Cleanup Workflow** (`cleanup.yml`)
@@ -89,6 +114,7 @@ com.template.package/
    - Update CHANGELOG.md with new version
    - Run Release workflow from GitHub Actions
    - Automated package and release creation
+   - Automatically triggers configured workflows in other repositories
 
 ## Installation Methods
 
@@ -97,7 +123,7 @@ com.template.package/
 1. Open Package Manager window
 2. Click "+" button
 3. Select "Add package from git URL"
-4. Enter: `https://github.com/Yueby/Template-Package.git`
+4. Enter: `https://github.com/username/repo.git`
 
 ### Manual Installation
 
