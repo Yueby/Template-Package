@@ -1,7 +1,7 @@
 {
   "name": "com.template.package",
   "displayName": "Template Package",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "unity": "2022.3",
   "description": "A template package for Unity",
   "author": {
