@@ -1,0 +1,40 @@
+name: Cleanup Releases and Tags
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Delete Releases
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            
+            for (const release of releases.data) {
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id
+              });
+              console.log(`Deleted release: ${release.tag_name}`);
+            }
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Delete Tags
+        run: |
+          git fetch --tags
+          git tag -l | xargs -r git push --delete origin
+          git tag -l | xargs -r git tag -d 
