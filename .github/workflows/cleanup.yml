@@ -10,31 +10,9 @@ jobs:
       contents: write
     
     steps:
-      - name: Delete Releases
-        uses: actions/github-script@v7
+      - name: Delete All Tags and Releases
+        uses: dev-drprasad/delete-tag-and-release@v1.0
         with:
-          script: |
-            const releases = await github.rest.repos.listReleases({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            
-            for (const release of releases.data) {
-              await github.rest.repos.deleteRelease({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: release.id
-              });
-              console.log(`Deleted release: ${release.tag_name}`);
-            }
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Delete Tags
-        run: |
-          git fetch --tags
-          git tag -l | xargs -r git push --delete origin
-          git tag -l | xargs -r git tag -d 
+          tag_name: "*"       # 删除所有 tags
+          delete_release: true # 同时删除关联的 releases
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
