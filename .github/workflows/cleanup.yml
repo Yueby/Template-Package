@@ -11,8 +11,35 @@ jobs:
     
     steps:
       - name: Delete All Tags and Releases
-        uses: dev-drprasad/delete-tag-and-release@v1.0
+        uses: actions/github-script@v7
         with:
-          tag_name: "*"       # 删除所有 tags
-          delete_release: true # 同时删除关联的 releases
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          script: |
+            // 删除所有 releases
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            
+            for (const release of releases.data) {
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id
+              });
+              console.log(`Deleted release: ${release.tag_name}`);
+            }
+
+            // 删除所有 tags
+            const tags = await github.rest.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            for (const tag of tags.data) {
+              await github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${tag.name}`
+              });
+              console.log(`Deleted tag: ${tag.name}`);
+            } 
