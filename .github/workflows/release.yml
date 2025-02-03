@@ -5,6 +5,9 @@ on:
 
 jobs:
   release:
+    permissions:
+      contents: write
+      pull-requests: read
     uses: Yueby/shared-workflows/.github/workflows/unity-package-release.yml@main
     with:
       package-name: ${{ vars.PACKAGE_NAME }}
