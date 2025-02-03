@@ -40,7 +40,7 @@ com.template.package/
    {
      "name": "com.company.package-name",    // Unique package identifier
      "displayName": "Package Display Name", // Name in Package Manager
-     "version": "0.0.1",                   // Semantic versioning
+     "version": "1.0.0",                   // Semantic versioning
      "unity": "2022.3",                    // Minimum Unity version
      "description": "Package description",  // Brief description
      "author": {
@@ -60,6 +60,19 @@ com.template.package/
    - Navigate to Settings > Secrets and variables > Actions
    - Add variable: `PACKAGE_NAME` = `com.company.package-name`
 
+2. Available GitHub Actions:
+   - **Release Workflow** (`release.yml`)
+     - Automatically creates Unity package and GitHub release
+     - Generates release from CHANGELOG.md
+     - Creates both .unitypackage and .zip formats
+     - Triggered manually from Actions tab
+
+   - **Cleanup Workflow** (`cleanup.yml`)
+     - Helps manage repository releases and tags
+     - Can remove all releases and tags when needed
+     - Useful for development and maintenance
+     - Triggered manually from Actions tab
+
 ### Development Workflow
 
 1. **Code Organization**
@@ -73,8 +86,9 @@ com.template.package/
 
 3. **Release Process**
    - Update version in package.json
-   - Create GitHub Release
-   - Automated package generation
+   - Update CHANGELOG.md with new version
+   - Run Release workflow from GitHub Actions
+   - Automated package and release creation
 
 ## Installation Methods
 
@@ -83,7 +97,7 @@ com.template.package/
 1. Open Package Manager window
 2. Click "+" button
 3. Select "Add package from git URL"
-4. Enter: `https://github.com/username/repo.git`
+4. Enter: `https://github.com/Yueby/Template-Package.git`
 
 ### Manual Installation
 
@@ -95,12 +109,6 @@ com.template.package/
 
 - Unity 2022.3.22f1 or higher
 - Git
-
-## Best Practices
-
-- Follow [Unity's Package Layout](https://docs.unity3d.com/Manual/cus-layout.html)
-- Use semantic versioning
-- Keep documentation up-to-date
 
 ## License
 
