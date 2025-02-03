@@ -123,7 +123,7 @@ com.template.package/
 1. Open Package Manager window
 2. Click "+" button
 3. Select "Add package from git URL"
-4. Enter: `https://github.com/username/repo.git`
+4. Enter: `https://github.com/Yueby/Template-Package.git`
 
 ### Manual Installation
 
