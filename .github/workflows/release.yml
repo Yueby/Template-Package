@@ -11,4 +11,3 @@ jobs:
     uses: Yueby/shared-workflows/.github/workflows/unity-package-release.yml@main
     with:
       package-name: ${{ vars.PACKAGE_NAME }}
-      configuration: ".github/changelog-config.json"
