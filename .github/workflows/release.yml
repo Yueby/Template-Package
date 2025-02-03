@@ -18,12 +18,13 @@ jobs:
         steps:
             - name: Trigger Workflows
               uses: actions/github-script@v7
+              env:
+                PAT_CONFIG: ${{ secrets.PAT }}
               with:
                 github-token: ${{ fromJson(secrets.PAT).token }}
                 script: |
-                  const config = ${{ secrets.PAT }};
+                  const config = JSON.parse(process.env.PAT_CONFIG);
                   for (const target of config.targets) {
-                    console.log(`Triggering ${target.workflow} in repository: ${target.repo}`);
                     await github.rest.actions.createWorkflowDispatch({
                       owner: context.repo.owner,
                       repo: target.repo,
